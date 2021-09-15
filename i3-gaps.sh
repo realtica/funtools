@@ -16,6 +16,7 @@ cd i3-gaps
 mkdir -p build && cd build
 meson ..
 ninja
+sudo ninja install
 #Now i3-gaps should be installed.
 
 ## Configuring
