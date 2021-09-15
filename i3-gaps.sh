@@ -17,6 +17,8 @@ mkdir -p build && cd build
 meson ..
 ninja
 sudo ninja install
+echo "put 'exec i3' over .xinitrc then run with 'startx'"
+
 #Now i3-gaps should be installed.
 
 ## Configuring
