@@ -19,12 +19,12 @@ ninja
 sudo ninja install
 echo "put 'exec i3' over .xinitrc then run with 'startx'"
 
-#Now i3-gaps should be installed.
+echo "installing bumblebee-status and it's dependencies."
+pip3 install --user bumblebee-status
+#CPU
+pip3 install psutil
+#Title
+pip3 install i3ipc
+#system
+sudo apt install python3-tk
 
-## Configuring
-#To enable gaps you need to set some variables in your i3 config.
-#gaps inner <# of pixels>
-#gaps outer <# of pixels>
-#Add this to get rid of titlebars because gaps doen't work with titlebars:
-#for_window [class="^.*"] border pixel 2
-#Refresh i3 and you're good to go!
