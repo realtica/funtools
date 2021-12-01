@@ -2,16 +2,29 @@ call plug#begin('~/.vim/plugged')
 " Parentheses Improved
 Plug 'luochen1990/rainbow'
 " fuzzy find files
-Plug 'ctrlpvim/ctrlp.vim' 
+" Plug 'ctrlpvim/ctrlp.vim' 
 " Status Bar
 Plug 'glepnir/galaxyline.nvim'
-Plug 'Avimitin/nerd-galaxyline'
+" Plug 'Avimitin/nerd-galaxyline'
 " Icons
 Plug 'kyazdani42/nvim-web-devicons'
 " Theme
 Plug 'lifepillar/vim-solarized8'
 " Conquer of Completion
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
+" Telescope fuzzy files and preview
+Plug 'nvim-lua/plenary.nvim'
+Plug 'nvim-telescope/telescope.nvim'
+Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}  " We recommend updating the parsers on update
+" Tabbar
+Plug 'romgrk/barbar.nvim'
+" Icons for bubbles linebar
+Plug 'yamatsum/nvim-nonicons'
+" cursorline
+" Plug 'yamatsum/nvim-cursorline'
+" Plug 'numToStr/Comment.nvim'
+" Plug 'ahmedkhalf/project.nvim'
+Plug 'nvim-telescope/telescope-project.nvim'
 
 call plug#end()
 
@@ -19,8 +32,13 @@ let g:rainbow_active = 1 "set to 0 if you want to enable it later via :RainbowTo
 set clipboard=unnamedplus
 " Exit Insert mode
 inoremap jk <ESC>
+inoremap ss <ESC>:w<CR>i
+nnoremap ss :w<CR>
+nnoremap ff :Format<CR>
+nnoremap <space><space> <cmd>Telescope find_files<cr>
+nnoremap <space>r <cmd>Telescope oldfiles<cr>
 " ctrlp
-let g:ctrlp_user_command = ['.git/', 'git --git-dir=%s/.git ls-files -oc --exclude-standard']
+" let g:ctrlp_user_command = ['.git/', 'git --git-dir=%s/.git ls-files -oc --exclude-standard']
 "set background=dark
 set background=dark
 colorscheme solarized8_high
@@ -30,14 +48,65 @@ set termguicolors
 set relativenumber
 
 set smarttab
-set cindent
-set tabstop=2
-set shiftwidth=2
+" set cindent
+" set tabstop=2
+set shiftwidth=4
 " always uses spaces instead of tab characters
 set expandtab
 syntax enable
+" galaxyline
+lua require("bubbles")
+lua require('nvim_comment').setup()
+lua require'telescope'.load_extension('project')
+" lua require'telescope'.extensions.project.project{}
+lua <<EOF
+vim.api.nvim_set_keymap(
+    'n',
+    '<C-p>',
+    ":lua require'telescope'.extensions.project.project{}<CR>",
+    {noremap = true, silent = true}
+)
+EOF
 
-" COC CONFIG
+
+" ------------------Barbar-------------------
+" Move to previous/next
+nnoremap <silent>    <A-,> :BufferPrevious<CR>
+nnoremap <silent>    <A-.> :BufferNext<CR>
+" Re-order to previous/next
+nnoremap <silent>    <A-<> :BufferMovePrevious<CR>
+nnoremap <silent>    <A->> :BufferMoveNext<CR>
+" Goto buffer in position...
+nnoremap <silent>    <A-1> :BufferGoto 1<CR>
+nnoremap <silent>    <A-2> :BufferGoto 2<CR>
+nnoremap <silent>    <A-3> :BufferGoto 3<CR>
+nnoremap <silent>    <A-4> :BufferGoto 4<CR>
+nnoremap <silent>    <A-5> :BufferGoto 5<CR>
+nnoremap <silent>    <A-6> :BufferGoto 6<CR>
+nnoremap <silent>    <A-7> :BufferGoto 7<CR>
+nnoremap <silent>    <A-8> :BufferGoto 8<CR>
+nnoremap <silent>    <A-9> :BufferLast<CR>
+" Pin/unpin buffer
+nnoremap <silent>    <A-p> :BufferPin<CR>
+" Close buffer
+nnoremap <silent>    <A-c> :BufferClose<CR>
+" Wipeout buffer
+"                          :BufferWipeout<CR>
+" Close commands
+"                          :BufferCloseAllButCurrent<CR>
+"                          :BufferCloseAllButPinned<CR>
+"                          :BufferCloseBuffersLeft<CR>
+"                          :BufferCloseBuffersRight<CR>
+" Magic buffer-picking mode
+nnoremap <silent> <C-s>    :BufferPick<CR>
+" Sort automatically by...
+nnoremap <silent> <Space>bb :BufferOrderByBufferNumber<CR>
+nnoremap <silent> <Space>bd :BufferOrderByDirectory<CR>
+nnoremap <silent> <Space>bl :BufferOrderByLanguage<CR>
+nnoremap <silent> <Space>bw :BufferOrderByWindowNumber<CR>
+" ------------------Barbar-------------------
+
+" ------------------COC CONFIG----------------------------------
 
 " Set internal encoding of vim, not needed on neovim, since coc.nvim using some
 " unicode characters in the file autoload/float.vim
@@ -204,6 +273,21 @@ nnoremap <silent><nowait> <space>j  :<C-u>CocNext<CR>
 nnoremap <silent><nowait> <space>k  :<C-u>CocPrev<CR>
 " Resume latest coc list.
 nnoremap <silent><nowait> <space>p  :<C-u>CocListResume<CR>
-"" COC CONFIG
-vmap <leader>f  <Plug>(coc-format-selected)
-nmap <leader>f  <Plug>(coc-format-selected)
+" Use <C-l> for trigger snippet expand.
+imap <C-l> <Plug>(coc-snippets-expand)
+
+" Use <C-j> for select text for visual placeholder of snippet.
+vmap <C-j> <Plug>(coc-snippets-select)
+
+" Use <C-j> for jump to next placeholder, it's default of coc.nvim
+let g:coc_snippet_next = '<c-j>'
+
+" Use <C-k> for jump to previous placeholder, it's default of coc.nvim
+let g:coc_snippet_prev = '<c-k>'
+
+" Use <C-j> for both expand and jump (make expand higher priority.)
+imap <C-j> <Plug>(coc-snippets-expand-jump)
+
+" Use <leader>x for convert visual selected code to snippet
+xmap <leader>x  <Plug>(coc-convert-snippet)
+"" ------------------COC CONFIG-------------------
