@@ -1,8 +1,4 @@
 call plug#begin('~/.vim/plugged')
-" Parentheses Improved
-Plug 'luochen1990/rainbow'
-" fuzzy find files
-" Plug 'ctrlpvim/ctrlp.vim' 
 " Status Bar
 Plug 'glepnir/galaxyline.nvim'
 " Plug 'Avimitin/nerd-galaxyline'
@@ -26,13 +22,20 @@ Plug 'yamatsum/nvim-nonicons'
 " Plug 'ahmedkhalf/project.nvim'
 Plug 'nvim-telescope/telescope-project.nvim'
 
+Plug 'p00f/nvim-ts-rainbow'
+
+Plug 'windwp/nvim-ts-autotag'
+
+Plug 'andymass/vim-matchup'
 call plug#end()
 
-let g:rainbow_active = 1 "set to 0 if you want to enable it later via :RainbowToggle
+set mouse=a
+filetype plugin indent on
+" let g:rainbow_active = 1 "set to 0 if you want to enable it later via :RainbowToggle
 set clipboard=unnamedplus
 " Exit Insert mode
 inoremap jk <ESC>
-inoremap ss <ESC>:w<CR>i
+" inoremap ss <ESC>:w<CR>i
 nnoremap ss :w<CR>
 nnoremap ff :Format<CR>
 nnoremap <space><space> <cmd>Telescope find_files<cr>
@@ -48,12 +51,13 @@ set termguicolors
 set relativenumber
 
 set smarttab
-" set cindent
-" set tabstop=2
-set shiftwidth=4
+set shiftwidth=2
+set softtabstop=2
+set tabstop=2
 " always uses spaces instead of tab characters
 set expandtab
 syntax enable
+set cc=80
 " galaxyline
 lua require("bubbles")
 lua require('nvim_comment').setup()
@@ -68,6 +72,37 @@ vim.api.nvim_set_keymap(
 )
 EOF
 
+lua <<EOF
+require("nvim-treesitter.configs").setup {
+  ensure_installed={
+    "html",
+    "typescript"
+  },
+  rainbow = {
+    enable = true,
+    -- disable = { "jsx", "cpp" }, list of languages you want to disable the plugin for
+    extended_mode = true, -- Also highlight non-bracket delimiters like html tags, boolean or table: lang -> boolean
+    max_file_lines = nil, -- Do not enable for files with more than n lines, int
+    -- colors = {}, -- table of hex strings
+    -- termcolors = {} -- table of colour name strings
+  },
+  highlight = {
+    enable = false,
+    custom_captures = {
+      -- Highlight the @foo.bar capture group with the "Identifier" highlight group.
+      ["foo.bar"] = "Identifier",
+    },
+    -- Setting this to true will run `:h syntax` and tree-sitter at the same time.
+    -- Set this to `true` if you depend on 'syntax' being enabled (like for indentation).
+    -- Using this option may slow down your editor, and you may see some duplicate highlights.
+    -- Instead of true it can also be a list of languages
+    additional_vim_regex_highlighting = false,
+  },
+  autotag = {
+    enable = true,
+  }
+}
+EOF
 
 " ------------------Barbar-------------------
 " Move to previous/next
