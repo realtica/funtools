@@ -18,7 +18,7 @@ Plug 'p00f/nvim-ts-rainbow'
 Plug 'windwp/nvim-ts-autotag'
 " navigate and highlight matching words
 Plug 'andymass/vim-matchup'
-" main one
+" Fast as FUCK nvim completion. SQLite, concurrent scheduler, hundreds of hours of optimization. 
 Plug 'ms-jpq/coq_nvim', {'branch': 'coq'}
 " 9000+ Snippets
 Plug 'ms-jpq/coq.artifacts', {'branch': 'artifacts'}
@@ -33,7 +33,7 @@ Plug 'kyazdani42/nvim-web-devicons' " lua
 " Icons for bubbles linebar
 Plug 'yamatsum/nvim-nonicons'
 call plug#end()
-" let g:coq_settings = { 'auto_start': v:true }
+let g:coq_settings = { 'auto_start': v:true }
 lua <<EOF
 require'navigator'.setup()
 EOF
@@ -73,7 +73,8 @@ end
 
 -- Use a loop to conveniently call 'setup' on multiple servers and
 -- map buffer local keybindings when the language server attaches
-local servers = { 'angularls', 'tsserver' , 'intelephense'}
+local servers = { 'angularls', 'tsserver' , 'intelephense', 'clangd'}
+-- local servers = { 'angularls', 'tsserver' , 'intelephense'}
 for _, lsp in ipairs(servers) do
   nvim_lsp[lsp].setup {
     on_attach = on_attach,
@@ -93,12 +94,8 @@ set clipboard=unnamedplus
 inoremap jk <ESC>
 " inoremap ss <ESC>:w<CR>i
 nnoremap ss :w<CR>
-nnoremap ff :Format<CR>
 nnoremap <space><space> <cmd>Telescope find_files<cr>
 nnoremap <space>r <cmd>Telescope oldfiles<cr>
-" ctrlp
-" let g:ctrlp_user_command = ['.git/', 'git --git-dir=%s/.git ls-files -oc --exclude-standard']
-"set background=dark
 set background=dark
 colorscheme solarized8_high
 " Enable true color

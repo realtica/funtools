@@ -7,7 +7,7 @@ fi
 
 # If you come from bash you might have to change your $PATH.
 
-export PATH=$HOME/.local/bin:/snap/bin:$HOME/bin:/usr/local/bin:$PATH
+export PATH=$HOME/.local/bin:/snap/bin:$HOME/bin:/usr/local/bin:$HOME/local/nvim/bin:$PATH
 
 # Path to your oh-my-zsh installation.
 export ZSH="/home/pi/.oh-my-zsh"
@@ -78,7 +78,7 @@ ZSH_THEME="powerlevel10k/powerlevel10k"
 # Custom plugins may be added to $ZSH_CUSTOM/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git zsh-autosuggestions wd)
+plugins=(git zsh-autosuggestions wd zsh-pyenv)
 
 source $ZSH/oh-my-zsh.sh
 
@@ -123,4 +123,22 @@ if [[ $("tty") == "/dev/tty1" ]]; then
   startx
 fi
 
-export LS_COLORS="$(vivid generate solarized-dark)"
+#export LS_COLORS="$(vivid generate solarized-dark)"
+alias ls="exa -abghHliS"
+
+[[ -e ~/.phpbrew/bashrc ]] && source ~/.phpbrew/bashrc
+
+export MYVIMRC="~/.config/nvim/init.vim"
+
+# Generated for envman. Do not edit.
+[ -s "$HOME/.config/envman/load.sh" ] && source "$HOME/.config/envman/load.sh"
+
+#history
+export HISTFILESIZE=1000000000
+export HISTSIZE=1000000000
+setopt INC_APPEND_HISTORY
+export HISTTIMEFORMAT="[%F %T] "
+setopt EXTENDED_HISTORY
+setopt HIST_FIND_NO_DUPS
+setopt HIST_IGNORE_ALL_DUPS
+
