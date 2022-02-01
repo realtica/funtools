@@ -1,15 +1,12 @@
 call plug#begin('~/.vim/plugged')
 " Status Bar
 Plug 'glepnir/galaxyline.nvim'
-" Plug 'Avimitin/nerd-galaxyline'
-" Theme
-Plug 'lifepillar/vim-solarized8'
+" Tabbar
+Plug 'romgrk/barbar.nvim'
 " Telescope fuzzy files and preview
 Plug 'nvim-lua/plenary.nvim'
 Plug 'nvim-telescope/telescope.nvim'
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}  " We recommend updating the parsers on update
-" Tabbar
-Plug 'romgrk/barbar.nvim'
 " Telescope
 Plug 'nvim-telescope/telescope-project.nvim'
 " Parentheses, brakets, etc
@@ -22,70 +19,25 @@ Plug 'andymass/vim-matchup'
 Plug 'ms-jpq/coq_nvim', {'branch': 'coq'}
 " 9000+ Snippets
 Plug 'ms-jpq/coq.artifacts', {'branch': 'artifacts'}
-Plug 'neovim/nvim-lspconfig'
 " Plug 'williamboman/nvim-lsp-installer'
 "
 Plug 'ray-x/guihua.lua', {'do': 'cd lua/fzy && make' }
 Plug 'ray-x/navigator.lua'
-" Icons
+Plug 'folke/trouble.nvim'
+Plug 'folke/lsp-colors.nvim'
+Plug 'neovim/nvim-lspconfig'
+" Themes
+Plug 'lifepillar/vim-solarized8'
+Plug 'arcticicestudio/nord-vim'
+Plug 'EdenEast/nightfox.nvim'
+
+Plug 'lukas-reineke/indent-blankline.nvim'
+Plug 'sbdchd/neoformat'
+
 Plug 'kyazdani42/nvim-web-devicons' " lua
-" Plug 'ryanoasis/vim-devicons' " vimscript
-" Icons for bubbles linebar
 Plug 'yamatsum/nvim-nonicons'
+Plug 'https://github.com/adelarsq/vim-devicons-emoji'
 call plug#end()
-let g:coq_settings = { 'auto_start': v:true }
-lua <<EOF
-require'navigator'.setup()
-EOF
-lua << EOF
-vim.lsp.set_log_level("debug")
--- require'lspconfig'.tsserver.setup{}
-local nvim_lsp = require('lspconfig')
-
--- Use an on_attach function to only map the following keys
--- after the language server attaches to the current buffer
-local on_attach = function(client, bufnr)
-  local function buf_set_keymap(...) vim.api.nvim_buf_set_keymap(bufnr, ...) end
-
-  -- Mappings.
-  local opts = { noremap=true, silent=true }
-
-  -- See `:help vim.lsp.*` for documentation on any of the below functions
-  buf_set_keymap('n', 'gD', '<cmd>lua vim.lsp.buf.declaration()<CR>', opts)
-  buf_set_keymap('n', 'gd', '<cmd>lua vim.lsp.buf.definition()<CR>', opts)
-  buf_set_keymap('n', 'K', '<cmd>lua vim.lsp.buf.hover()<CR>', opts)
-  buf_set_keymap('n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<CR>', opts)
-  buf_set_keymap('n', '<C-k>', '<cmd>lua vim.lsp.buf.signature_help()<CR>', opts)
-  buf_set_keymap('n', '<space>wa', '<cmd>lua vim.lsp.buf.add_workspace_folder()<CR>', opts)
-  buf_set_keymap('n', '<space>wr', '<cmd>lua vim.lsp.buf.remove_workspace_folder()<CR>', opts)
-  buf_set_keymap('n', '<space>wl', '<cmd>lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<CR>', opts)
-  buf_set_keymap('n', '<space>D', '<cmd>lua vim.lsp.buf.type_definition()<CR>', opts)
-  buf_set_keymap('n', '<space>rn', '<cmd>lua vim.lsp.buf.rename()<CR>', opts)
-  buf_set_keymap('n', '<space>ca', '<cmd>lua vim.lsp.buf.code_action()<CR>', opts)
-  buf_set_keymap('n', 'gr', '<cmd>lua vim.lsp.buf.references()<CR>', opts)
-  buf_set_keymap('n', '<space>e', '<cmd>lua vim.diagnostic.open_float()<CR>', opts)
-  buf_set_keymap('n', '[d', '<cmd>lua vim.diagnostic.goto_prev()<CR>', opts)
-  buf_set_keymap('n', ']d', '<cmd>lua vim.diagnostic.goto_next()<CR>', opts)
-  buf_set_keymap('n', '<space>q', '<cmd>lua vim.diagnostic.setloclist()<CR>', opts)
-  buf_set_keymap('n', '<space>f', '<cmd>lua vim.lsp.buf.formatting()<CR>', opts)
-
-end
-
--- Use a loop to conveniently call 'setup' on multiple servers and
--- map buffer local keybindings when the language server attaches
-local servers = { 'angularls', 'tsserver' , 'intelephense', 'clangd'}
--- local servers = { 'angularls', 'tsserver' , 'intelephense'}
-for _, lsp in ipairs(servers) do
-  nvim_lsp[lsp].setup {
-    on_attach = on_attach,
-    flags = {
-      debounce_text_changes = 150,
-    }
-  }
-end
-EOF
-
-
 set mouse=a
 filetype plugin indent on
 " let g:rainbow_active = 1 "set to 0 if you want to enable it later via :RainbowToggle
@@ -96,8 +48,12 @@ inoremap jk <ESC>
 nnoremap ss :w<CR>
 nnoremap <space><space> <cmd>Telescope find_files<cr>
 nnoremap <space>r <cmd>Telescope oldfiles<cr>
+nnoremap <silent> ff    <cmd>lua vim.lsp.buf.formatting()<CR>
 set background=dark
-colorscheme solarized8_high
+
+" colorscheme solarized8_high
+" colorscheme nord
+colorscheme nightfox
 " Enable true color
 set termguicolors
 
@@ -107,29 +63,79 @@ set smarttab
 set shiftwidth=2
 set softtabstop=2
 set tabstop=2
+" set autoindent
+" set smartindent
 " always uses spaces instead of tab characters
 set expandtab
 syntax enable
 set cc=80
-" galaxyline
-lua require("bubbles")
-lua require('nvim_comment').setup()
-lua require'telescope'.load_extension('project')
-" lua require'telescope'.extensions.project.project{}
-lua <<EOF
-vim.api.nvim_set_keymap(
-    'n',
-    '<C-p>',
-    ":lua require'telescope'.extensions.project.project{}<CR>",
-    {noremap = true, silent = true}
-)
-EOF
+" Always show the signcolumn, otherwise it would shift the text each time
+" diagnostics appear/become resolved.
+if has("nvim-0.5.0") || has("patch-8.1.1564")
+  " Recently vim can merge signcolumn and number column into one
+  set signcolumn=number
+else
+  set signcolumn=yes
+endif
 
-lua <<EOF
+let g:python3_host_prog=$PYENV_HOME.'/versions/neovim-3/bin/python'
+" custom setting for clangformat
+let g:neoformat_c_clangformat = {
+    \ 'exe': 'clang-format',
+    \ 'args': ['--style="{BasedOnStyle: Mozilla, IndentWidth: 4}"', '--verbose']
+\}
+let g:neoformat_enabled_c = ['clangformat']
+
+" let g:neoformat_html_prettier = {
+"               \ 'exe': 'prettier',
+"               \ 'args': ['--stdin', '--single-quote'],
+"               \ 'stdin': 1,
+"               \ }
+" let g:neoformat_enabled_html = ['prettier']
+" 
+" let g:neoformat_run_all_formatters = 1
+let g:neoformat_python_black = {
+    \ 'exe': 'python -m black',
+    \ 'stdin': 1,
+    \ 'args': ['-q', '-'],
+    \ }
+let g:neoformat_enabled_python = ['black']
+let g:coq_settings = { 'auto_start': v:true }
+" LUA
+lua << EOF
+require'navigator'.setup(
+{
+  lsp={
+      format_on_save=false
+    }
+}
+)
+local coq = require "coq"
+require'lspconfig'.clangd.setup{}
+require'lspconfig'.tsserver.setup{}
+require'lspconfig'.bashls.setup{}
+require'lspconfig'.html.setup(
+coq.lsp_ensure_capabilities()
+)
+require'lspconfig'.pylsp.setup{}
+require'lspconfig'.rust_analyzer.setup{}
+-- require'lspconfig'.eslint.setup{}
+require("trouble").setup {}
+local signs = { Error = " ", Warning = " ", Hint = " ", Information = " " }
+for type, icon in pairs(signs) do
+  local hl = "LspDiagnosticsSign" .. type
+  vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = "" })
+end
 require("nvim-treesitter.configs").setup {
   ensure_installed={
     "html",
-    "typescript"
+    "typescript",
+    "c",
+    "php",
+    "bash",
+    "javascript",
+    "python",
+    "rust"
   },
   rainbow = {
     enable = true,
@@ -140,7 +146,7 @@ require("nvim-treesitter.configs").setup {
     -- termcolors = {} -- table of colour name strings
   },
   highlight = {
-    enable = false,
+    enable = true,
     custom_captures = {
       -- Highlight the @foo.bar capture group with the "Identifier" highlight group.
       ["foo.bar"] = "Identifier",
@@ -149,47 +155,55 @@ require("nvim-treesitter.configs").setup {
     -- Set this to `true` if you depend on 'syntax' being enabled (like for indentation).
     -- Using this option may slow down your editor, and you may see some duplicate highlights.
     -- Instead of true it can also be a list of languages
-    additional_vim_regex_highlighting = false,
+    additional_vim_regex_highlighting = true,
   },
   autotag = {
     enable = true,
   }
 }
-EOF
+require'telescope'.load_extension('project')
+vim.api.nvim_set_keymap(
+    'n',
+    '<C-p>',
+    ":lua require'telescope'.extensions.project.project{}<CR>",
+    {noremap = true, silent = true}
+)
 
-" ------------------Barbar-------------------
-" Move to previous/next
-nnoremap <silent>    <A-,> :BufferPrevious<CR>
-nnoremap <silent>    <A-.> :BufferNext<CR>
-" Re-order to previous/next
-nnoremap <silent>    <A-<> :BufferMovePrevious<CR>
-nnoremap <silent>    <A->> :BufferMoveNext<CR>
-" Goto buffer in position...
-nnoremap <silent>    <A-1> :BufferGoto 1<CR>
-nnoremap <silent>    <A-2> :BufferGoto 2<CR>
-nnoremap <silent>    <A-3> :BufferGoto 3<CR>
-nnoremap <silent>    <A-4> :BufferGoto 4<CR>
-nnoremap <silent>    <A-5> :BufferGoto 5<CR>
-nnoremap <silent>    <A-6> :BufferGoto 6<CR>
-nnoremap <silent>    <A-7> :BufferGoto 7<CR>
-nnoremap <silent>    <A-8> :BufferGoto 8<CR>
-nnoremap <silent>    <A-9> :BufferLast<CR>
-" Pin/unpin buffer
-nnoremap <silent>    <A-p> :BufferPin<CR>
-" Close buffer
-nnoremap <silent>    <A-c> :BufferClose<CR>
-" Wipeout buffer
-"                          :BufferWipeout<CR>
-" Close commands
-"                          :BufferCloseAllButCurrent<CR>
-"                          :BufferCloseAllButPinned<CR>
-"                          :BufferCloseBuffersLeft<CR>
-"                          :BufferCloseBuffersRight<CR>
-" Magic buffer-picking mode
-nnoremap <silent> <C-s>    :BufferPick<CR>
-" Sort automatically by...
-nnoremap <silent> <Space>bb :BufferOrderByBufferNumber<CR>
-nnoremap <silent> <Space>bd :BufferOrderByDirectory<CR>
-nnoremap <silent> <Space>bl :BufferOrderByLanguage<CR>
-nnoremap <silent> <Space>bw :BufferOrderByWindowNumber<CR>
-" ------------------Barbar-------------------
+-- barbar --
+local map = vim.api.nvim_set_keymap
+local opts = { noremap = true, silent = true }
+
+-- Move to previous/next
+map('n', '<A-,>', ':BufferPrevious<CR>', opts)
+map('n', '<A-.>', ':BufferNext<CR>', opts)
+-- Re-order to previous/next
+map('n', '<A-<>', ':BufferMovePrevious<CR>', opts)
+map('n', '<A->>', ' :BufferMoveNext<CR>', opts)
+-- Goto buffer in position...
+map('n', '<A-1>', ':BufferGoto 1<CR>', opts)
+map('n', '<A-2>', ':BufferGoto 2<CR>', opts)
+map('n', '<A-3>', ':BufferGoto 3<CR>', opts)
+map('n', '<A-4>', ':BufferGoto 4<CR>', opts)
+map('n', '<A-5>', ':BufferGoto 5<CR>', opts)
+map('n', '<A-6>', ':BufferGoto 6<CR>', opts)
+map('n', '<A-7>', ':BufferGoto 7<CR>', opts)
+map('n', '<A-8>', ':BufferGoto 8<CR>', opts)
+map('n', '<A-9>', ':BufferGoto 9<CR>', opts)
+map('n', '<A-0>', ':BufferLast<CR>', opts)
+-- Close buffer
+map('n', '<A-c>', ':BufferClose<CR>', opts)
+-- Wipeout buffer
+--                 :BufferWipeout<CR>
+-- Close commands
+--                 :BufferCloseAllButCurrent<CR>
+--                 :BufferCloseBuffersLeft<CR>
+--                 :BufferCloseBuffersRight<CR>
+-- Magic buffer-picking mode
+map('n', '<C-s>', ':BufferPick<CR>', opts)
+-- Sort automatically by...
+map('n', '<Space>bb', ':BufferOrderByBufferNumber<CR>', opts)
+map('n', '<Space>bd', ':BufferOrderByDirectory<CR>', opts)
+map('n', '<Space>bl', ':BufferOrderByLanguage<CR>', opts)
+EOF
+lua require("bubbles")
+lua require('nvim_comment').setup()
