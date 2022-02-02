@@ -73,6 +73,5 @@ while [ 1 ]; do
       exit
       ;;
   esac
-
 done
 exit
