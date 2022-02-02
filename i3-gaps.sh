@@ -1,4 +1,8 @@
 #!/bin/bash
+## Driver AMD radeon
+sudo apt install firmware-amd-graphics libgl1-mesa-dri libglx-mesa0 mesa-vulkan-drivers xserver-xorg-video-all -y
+## Xorg
+sudo apt install xorg -y
 
 echo '+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++'
 echo 'Installing i3-gaps'

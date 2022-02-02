@@ -37,6 +37,7 @@ Plug 'sbdchd/neoformat'
 Plug 'kyazdani42/nvim-web-devicons' " lua
 Plug 'yamatsum/nvim-nonicons'
 Plug 'https://github.com/adelarsq/vim-devicons-emoji'
+Plug 'https://github.com/terrortylor/nvim-comment'
 call plug#end()
 set mouse=a
 filetype plugin indent on
@@ -78,7 +79,7 @@ else
   set signcolumn=yes
 endif
 
-let g:python3_host_prog=$PYENV_HOME.'/versions/neovim-3/bin/python'
+let g:python3_host_prog=$HOME.'/.pyenv/shims/python'
 " custom setting for clangformat
 let g:neoformat_c_clangformat = {
     \ 'exe': 'clang-format',
@@ -100,6 +101,14 @@ let g:neoformat_python_black = {
     \ 'args': ['-q', '-'],
     \ }
 let g:neoformat_enabled_python = ['black']
+let g:shfmt_opt="-ci"
+" let g:neoformat_sh = {
+"     \ 'exe': 'shfmt',
+"     \ 'args': ['-i 2', '-ci']
+" \}
+" let g:neoformat_enabled_sh = ['shfmt']
+" let g:neoformat_verbose = 1
+let g:neoformat_only_msg_on_error = 1
 let g:coq_settings = { 'auto_start': v:true }
 " LUA
 lua << EOF

@@ -7,10 +7,10 @@ fi
 
 # If you come from bash you might have to change your $PATH.
 
-export PATH=$HOME/.local/bin:/snap/bin:$HOME/bin:/usr/local/bin:$HOME/local/nvim/bin:$PATH
+export PATH=$HOME/.local/bin:/snap/bin:$HOME/bin:/usr/local/bin:$HOME/local/nvim/bin:$HOME/.pyenv/bin:$PATH
 
 # Path to your oh-my-zsh installation.
-export ZSH="/home/pi/.oh-my-zsh"
+export ZSH="$HOME/.oh-my-zsh"
 
 # Set name of the theme to load --- if set to "random", it will
 # load a random theme each time oh-my-zsh is loaded, in which case,
@@ -78,7 +78,7 @@ ZSH_THEME="powerlevel10k/powerlevel10k"
 # Custom plugins may be added to $ZSH_CUSTOM/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git zsh-autosuggestions wd zsh-pyenv)
+plugins=(git zsh-autosuggestions wd)
 
 source $ZSH/oh-my-zsh.sh
 
@@ -142,3 +142,12 @@ setopt EXTENDED_HISTORY
 setopt HIST_FIND_NO_DUPS
 setopt HIST_IGNORE_ALL_DUPS
 
+eval "$(pyenv init --path)"
+eval "$(pyenv virtualenv-init -)"
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+
+
+export XDG_DATA_DIRS="/var/lib/snapd/desktop"
+export GOROOT=/home/realtica/.go
+export GOPATH=/home/realtica/go
+export PATH=$PATH:$GOROOT/bin:$GOPATH/bin
